@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyPokeAPI.Models;
 
@@ -11,9 +12,10 @@ using MyPokeAPI.Models;
 namespace MyPokeAPI.Migrations
 {
     [DbContext(typeof(MyPokemonContext))]
-    partial class MyPokemonContextModelSnapshot : ModelSnapshot
+    [Migration("20221007111513_relations-1")]
+    partial class relations1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,6 +31,9 @@ namespace MyPokeAPI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Fk_UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -76,11 +81,13 @@ namespace MyPokeAPI.Migrations
 
             modelBuilder.Entity("MyPokeAPI.Models.MyPokemon", b =>
                 {
-                    b.HasOne("MyPokeAPI.Models.User", null)
+                    b.HasOne("MyPokeAPI.Models.User", "User")
                         .WithMany("Pokemons")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MyPokeAPI.Models.User", b =>

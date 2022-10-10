@@ -22,7 +22,7 @@ namespace MyPokeAPI.Controllers
         }
 
         // GET: api/Users
-        [Authorize]
+        // [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
@@ -33,7 +33,7 @@ namespace MyPokeAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users.Include(p => p.Pokemons).SingleOrDefaultAsync(u => u.UserId == id);
 
             if (user == null)
             {
